@@ -8,7 +8,7 @@ public class DominoGame<TToken> where TToken : DominoToken {
     IList<DominoPlayer> players;
     IEnumerable<DominoToken>[] playerTokens;
     List<DominoMove> moves;
-    DominoToken startToken;
+    DominoToken? startToken;
     int[] freeValues;
     int currentPlayer;
     int passCounter = 0;
@@ -40,16 +40,20 @@ public class DominoGame<TToken> where TToken : DominoToken {
             this.playerTokens[i] = playerTokenList;
         }
 
+        StartGame();
+    }
+    
+    void StartGame() {
         this.startToken = this.players[this.currentPlayer].PlayStartToken(playerTokens[this.currentPlayer]);
         this.playerTokens[this.currentPlayer] = playerTokens[this.currentPlayer].Where(
             token => token != this.startToken
         );
+
         this.moves.Add(new DominoMove(this.players[this.currentPlayer], this.startToken));
         this.freeValues[0] = this.startToken.Left;
         this.freeValues[1] = this.startToken.Right;
-        this.currentPlayer++;
+        NextPlayer();
     }
-
     bool IsValid(DominoMove move) {
         if (this.freeValues.Contains(move.Token.Left) || this.freeValues.Contains(move.Token.Right))
             return true;
@@ -67,7 +71,7 @@ public class DominoGame<TToken> where TToken : DominoToken {
     }
 
     protected virtual bool WinCondition() {
-        if (passCounter == 4)
+        if (passCounter == this.players.Count)
             return true;
         return false;
     }
@@ -113,9 +117,14 @@ public class DominoGame<TToken> where TToken : DominoToken {
         if (!ended) {
             while (!WinCondition()) {
                 if (CanPlay(this.currentPlayer)) {
+                    Console.Clear();
+
+                    foreach(DominoMove m in this.moves)
+                        System.Console.WriteLine(m);
+
                     this.passCounter = 0;
 
-                    DominoMove move = players[this.currentPlayer].PlayToken(
+                    DominoMove move = players[this.currentPlayer].Play(
                         playerTokens[this.currentPlayer], this.moves, this.freeValues
                     );
                     
@@ -123,19 +132,20 @@ public class DominoGame<TToken> where TToken : DominoToken {
                     
                     NextPlayer();
                 }
-                else
+                else {
                     this.passCounter++;
+                    NextPlayer();
+                }
             }
             ended = true;
         }
-        
-        foreach(DominoMove move in this.moves)
-            System.Console.WriteLine(move);
         System.Console.WriteLine($"Winner: {GetWinner()}");
-        System.Console.WriteLine(this.moves.Count);
     }
 }
 
+/// <summary>
+///     Object representing a move: A reference to a player and the token he played
+/// </summary>
 public class DominoMove {
     public DominoPlayer Player { get; }
     public DominoToken Token { get; }
@@ -145,6 +155,9 @@ public class DominoMove {
         this.Token = token;
     }
 
+    /// <returns>
+    ///     Given a token and a game state, returns if that token can be played
+    /// </returns>
     public static bool IsValid(DominoToken token, int[] freeValues) {
         if (freeValues.Contains(token.Left) || freeValues.Contains(token.Right))
             return true;
