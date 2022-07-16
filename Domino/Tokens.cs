@@ -38,11 +38,10 @@ public class DominoToken : ITokenGenerator {
 
     public override string ToString()
     {
-        return $"({Left} | {Right})";
-    }
+        if (this.Left == -1 || this.Right == -1)
+            return "Domino Token";
 
-    public virtual string Represent() {
-        return "Domino Token";
+        return $"({Left} | {Right})";
     }
 
     public virtual IList<DominoToken> GenerateTokens(int tokenValues) { 
@@ -59,14 +58,14 @@ public class DominoToken : ITokenGenerator {
     }
 }
 
+/// <summary>
+    ///     Token value implementation where the number 6 doesn't represent a value
+    ///     to compute for the total
+    /// </summary>
 public class SixUnvaluableDominoToken : DominoToken {
     public SixUnvaluableDominoToken() : base() {}
     public SixUnvaluableDominoToken(int left, int right) : base(left, right) {}
 
-    /// <summary>
-    ///     Token value implementation where the number 6 doesn't represent a value
-    ///     to compute for the total
-    /// </summary>
     public override int Value()
     {
         int value = 0;
@@ -79,9 +78,11 @@ public class SixUnvaluableDominoToken : DominoToken {
         return value;
     }
 
-    public override string Represent()
-    {
-        return $"Six Unvaluable {base.Represent()}";
+    public override string ToString() {
+        if (this.Left == -1 || this.Right == -1)
+            return "Six Unvaluable Domino Token";
+            
+        return base.ToString();
     }
     
     public override IList<DominoToken> GenerateTokens(int tokenValues) {
@@ -98,21 +99,23 @@ public class SixUnvaluableDominoToken : DominoToken {
     }
 }
 
+    /// <summary>
+    ///     Token value implementation where the basic value implementation is doubled
+    /// </summary>
 public class DoubledValueDominoToken : DominoToken {
     public DoubledValueDominoToken() : base() {}    
     public DoubledValueDominoToken(int left, int right) : base(left, right) {}
 
-    /// <summary>
-    ///     Token value implementation where the basic value implementation is doubled
-    /// </summary>
     public override int Value()
     {
         return  2 * base.Value();
     }
 
-    public override string Represent()
-    {
-        return $"Doubled Value {base.Represent()}";
+    public override string ToString() {
+        if (this.Left == -1 || this.Right == -1)
+            return "Doubled Value Domino Token";
+
+        return base.ToString();
     }
 
     public override IList<DominoToken> GenerateTokens(int tokenValues)
@@ -131,8 +134,8 @@ public class DoubledValueDominoToken : DominoToken {
 }
 
 /// <summary>
-///     Token generator class. This creates a collection of token objects from
-///     a given maxNumber. E.g: 9-based Domino, 7-based Domino
+///     Token generator interface. This contains an abstraction to create a collection 
+///     of token objects from a given maxNumber. E.g: 9-based Domino, 7-based Domino
 /// </summary>
 public interface ITokenGenerator {
     public IList<DominoToken> GenerateTokens(int tokenValues);
