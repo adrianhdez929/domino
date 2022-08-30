@@ -44,6 +44,10 @@ public class DominoToken : ITokenGenerator {
         return $"({Left} | {Right})";
     }
 
+    /// <summary>
+    ///     This method generates the initial set of tokens to deal to each player given a max value
+    ///     and using the current class instance.
+    /// </summary>
     public virtual IList<DominoToken> GenerateTokens(int tokenValues) { 
         List<int[]> tokenValuesList = new List<int[]>();
         List<DominoToken> tokens = new List<DominoToken>();
@@ -58,7 +62,7 @@ public class DominoToken : ITokenGenerator {
     }
 }
 
-/// <summary>
+    /// <summary>
     ///     Token value implementation where the number 6 doesn't represent a value
     ///     to compute for the total
     /// </summary>
@@ -85,6 +89,10 @@ public class SixUnvaluableDominoToken : DominoToken {
         return base.ToString();
     }
     
+    /// <summary>
+    ///     This method generates the initial set of tokens to deal to each player given a max value
+    ///     and using the current class instance.
+    /// </summary>
     public override IList<DominoToken> GenerateTokens(int tokenValues) {
         List<int[]> tokenValuesList = new List<int[]>();
         List<DominoToken> tokens = new List<DominoToken>();
@@ -118,6 +126,10 @@ public class DoubledValueDominoToken : DominoToken {
         return base.ToString();
     }
 
+    /// <summary>
+    ///     This method generates the initial set of tokens to deal to each player given a max value
+    ///     and using the current class instance.
+    /// </summary>
     public override IList<DominoToken> GenerateTokens(int tokenValues)
     {
         List<int[]> tokenValuesList = new List<int[]>();

@@ -21,6 +21,10 @@ public class DominoGame {
     IWinner winnerCheck;
     IWinCondition winCondition;
 
+    /// <summary>
+    ///     Base constructor for the game, it generates the tokens to be dealed by a random selection 
+    ///     to each player and then starts the game.
+    /// </summary>
     public DominoGame(
         int tokenValues, 
         int tokenAmount, 
