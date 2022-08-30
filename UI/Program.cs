@@ -44,19 +44,29 @@ class Program {
     // Generic method to ask user for input
     static int GetInput(int defaultVal, int max = -1) {
         string? input = Console.ReadLine();
-        int result = int.Parse(input! == "" ? defaultVal.ToString() : input!);
+        int? result = null;
+        try {
+            result = int.Parse(input! == "" ? defaultVal.ToString() : input!);
+            if (max == -1)
+                return (int)result!;
+        } catch (FormatException) {
+            Console.WriteLine("String is not a valid input");
+        }
         
-        if (max > -1) {
-            while(result > max) {
-                Console.WriteLine($"{result} is not a valid input");
-                Console.WriteLine("Plase select a valid value");
+        while(result > max || result == null) {
+            Console.WriteLine("Plase select a valid value");
 
-                input = Console.ReadLine();
+            input = Console.ReadLine();
+            try {
                 result = int.Parse(input! == "" ? defaultVal.ToString() : input!);
+                if (max == -1)
+                    break;
+            } catch (FormatException) {
+                Console.WriteLine("String is not a valid input");
             }
         }
         
-        return result;
+        return (int)result!;
     }
 
     // Logic to allow user to enter the player amount
