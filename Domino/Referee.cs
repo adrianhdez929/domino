@@ -22,6 +22,9 @@ public interface IWinCondition {
 ///     Standard game win conditions implementations: 4 passes in a row or no player can play
 /// </summary>
 public class StandardWinCondition : IWinCondition {
+    /// <summary>
+    ///     This condition is met when there are 4 continuous players without making a move.
+    /// </summary>
     public bool Achieved(
         IEnumerable<DominoPlayer> players, 
         IEnumerable<IEnumerable<DominoToken>> playerTokens, 
@@ -48,6 +51,11 @@ public class StandardWinCondition : IWinCondition {
 public class FourRoundsWinCondition : IWinCondition {
     int counter = 4;
     int turns = 0;
+
+    /// <summary>
+    ///     This condition is met when 4 rounds have been played despite the amount of passes per player, 
+    ///     unless none can play.
+    /// </summary>
     public bool Achieved(
         IEnumerable<DominoPlayer> players, 
         IEnumerable<IEnumerable<DominoToken>> playerTokens, 

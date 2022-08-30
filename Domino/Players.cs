@@ -38,6 +38,10 @@ public abstract class DominoPlayer {
 /// </summary>
 public class GreedyDominoPlayer : DominoPlayer {
     public GreedyDominoPlayer(string name) : base(name) {}
+
+    /// <summary>
+    ///     Plays the most valuable token in hand from a set of validated moves.
+    /// </summary>
     public override DominoMove Play(
         IEnumerable<DominoToken> tokens, IEnumerable<DominoMove> moves, int[] freeValues
     ) {
@@ -49,6 +53,10 @@ public class GreedyDominoPlayer : DominoPlayer {
 
         return new DominoMove(this, selected);
     }
+
+    /// <summary>
+    ///     Plays the more valuable token at the start move.
+    /// </summary>
 
     public override DominoToken PlayStartToken(IEnumerable<DominoToken> tokens) {
         return tokens.OrderBy(token => token.Value()).First();
@@ -67,11 +75,17 @@ public class RandomDominoPlayer : DominoPlayer {
     Random randObj = new Random();
     public RandomDominoPlayer(string name) : base(name) {}
 
+    /// <summary>
+    ///     Plays a random token at the start move.
+    /// </summary>
     public override DominoToken PlayStartToken(IEnumerable<DominoToken> tokens)
     {
         return tokens.ElementAt(this.randObj.Next(tokens.Count()));
     }
 
+    /// <summary>
+    ///     Plays a random token in hand from a set of validated moves.
+    /// </summary>
     public override DominoMove Play(
         IEnumerable<DominoToken> tokens, IEnumerable<DominoMove> moves, int[] freeValues
     ) {
@@ -95,6 +109,9 @@ public class RandomDominoPlayer : DominoPlayer {
 public class HumanDominoPlayer : DominoPlayer {
     public HumanDominoPlayer(string name) : base(name) {}
 
+    /// <summary>
+    ///     Plays a token selected by the user at the start move.
+    /// </summary>
     public override DominoToken PlayStartToken(IEnumerable<DominoToken> tokens)
     {
         System.Console.WriteLine("Enter the initial token to play:");
@@ -109,6 +126,9 @@ public class HumanDominoPlayer : DominoPlayer {
         return tokens.ElementAt(tokenIndex);
     }
 
+    /// <summary>
+    ///     Plays the selected token in the user's hand from a set of validated moves.
+    /// </summary>
     public override DominoMove Play(IEnumerable<DominoToken> tokens, IEnumerable<DominoMove> moves, int[] freeValues)
     {
         IEnumerable<DominoToken> availableTokens = tokens.Where(
@@ -157,6 +177,9 @@ public class DataDominoPlayer : DominoPlayer {
         this.maxTokenValue = maxValue;
     }
 
+    /// <summary>
+    ///     Selects the bigger value in hand to prioritize playing it
+    /// </summary>
     int GetData(IEnumerable<DominoToken> tokens) {
         int[] values = new int[this.maxTokenValue + 1];
 
@@ -172,6 +195,10 @@ public class DataDominoPlayer : DominoPlayer {
 
         return values.Max();
     }
+
+    /// <summary>
+    ///     Plays a token from the selected data from a set of validated moves.
+    /// </summary>
     public override DominoMove Play(
         IEnumerable<DominoToken> tokens, IEnumerable<DominoMove> moves, int[] freeValues
     ) {
@@ -191,6 +218,9 @@ public class DataDominoPlayer : DominoPlayer {
         return new DominoMove(this, availableTokens.First());
     }
 
+    /// <summary>
+    ///     Plays token from the selected data in the first move.
+    /// </summary>
     public override DominoToken PlayStartToken(IEnumerable<DominoToken> tokens) {
         if (this.data == -1) 
             this.data = GetData(tokens);
